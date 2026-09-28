@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layout Lab — Flexbox & Grid Playground</title>
+  <style>
+    :root {
+      --ink: #18314f;
+      --muted: #6e829a;
+      --line: #dbe5ef;
+      --panel: #ffffff;
+      --canvas: #f4f8fc;
+      --blue: #2765e7;
+      --blue-soft: #eaf1ff;
+      --orange: #ff8a4c;
+      --shadow: 0 20px 50px rgba(32, 67, 103, .11);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+        .box-controls {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .box-controls h3 {
+      margin: 0 0 16px;
+      font-size: 13px;
+    }
+
+    .range-field {
+      margin-top: 14px;
+    }
+
+    .range-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .range-label label {
+      margin: 0;
+    }
+
+    .range-value {
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+    button, select { font: inherit; }
+    .page { min-height: 100vh; padding: 40px clamp(20px, 5vw, 76px) 64px; }
+    .topbar, .hero, .workspace, .footer { max-width: 1180px; margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; letter-spacing: -.02em; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; color: white; background: var(--blue); box-shadow: 0 7px 16px rgba(39, 101, 231, .25); }
+    .brand-mark span { display: block; width: 14px; height: 14px; border: 2px solid white; border-radius: 4px; }
+    .eyebrow { margin: 0; color: var(--blue); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .hero { padding: 62px 0 40px; }
+    h1 { margin: 10px 0 14px; max-width: 680px; font-size: clamp(36px, 6vw, 68px); line-height: .98; letter-spacing: -.065em; }
+    .hero-copy { max-width: 580px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.65; }
+    .workspace { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: var(--shadow); }
+    .controls { padding: 22px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 19px; border-bottom: 1px solid var(--line); }
+    .panel-title { margin: 0; font-size: 14px; font-weight: 800; }
+    .live { display: inline-flex; align-items: center; gap: 6px; color: #239969; font-size: 11px; font-weight: 800; }
+    .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #32bd85; box-shadow: 0 0 0 4px #e2f8ee; }
+    .field { margin-top: 19px; }
+    label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    select { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 11px 12px; color: var(--ink); background: #fbfdff; outline: 0; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+    select:hover, select:focus { border-color: #8eb0f6; box-shadow: 0 0 0 3px var(--blue-soft); }
+    .reset { width: 100%; margin-top: 22px; border: 0; border-radius: 9px; padding: 11px; color: var(--blue); background: var(--blue-soft); font-size: 12px; font-weight: 800; cursor: pointer; transition: transform .2s, background .2s; }
+    .reset:hover { background: #dce8ff; transform: translateY(-1px); }
+    .stage { min-height: 520px; padding: 25px; overflow: hidden; background: #fff; }
+    .stage-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 22px; }
+    .stage-title { margin: 0; font-size: 14px; font-weight: 800; }
+    .stage-hint { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .css-badge { padding: 7px 10px; border-radius: 8px; color: #51708e; background: #f3f7fb; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; white-space: nowrap; }
+    .demo-container { min-height: 370px; padding: 18px; border: 2px dashed #aec1d4; border-radius: 14px; background: #f8fbff; transition: all .35s ease; }
+    .item { min-width: 84px; min-height: 84px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.6); border-radius: 13px; color: white; font-size: 22px; font-weight: 800; box-shadow: 0 10px 16px rgba(35, 67, 107, .14); transition: all .35s ease; }
+    .item small { display: block; margin-top: 3px; font-size: 9px; font-weight: 700; letter-spacing: .1em; opacity: .8; }
+    .item:nth-child(1), .item:nth-child(4) { background: #ff9564; }
+    .item:nth-child(2), .item:nth-child(5) { background: #356fe5; }
+    .item:nth-child(3) { background: #8f6de6; }
+    .code-card { margin-top: 18px; padding: 15px 17px; border-radius: 11px; background: #172f4c; color: #d7e6f5; font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; overflow: auto; }
+    .code-card .selector { color: #7dc8ff; }
+    .code-card .property { color: #ffbd83; }
+    .code-card .value { color: #b6f0c5; }
+    .footer { padding-top: 27px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 760px) {
+      .page { padding-top: 24px; }
+      .hero { padding-top: 48px; }
+      .workspace { grid-template-columns: 1fr; }
+      .stage { min-height: 0; }
+      .stage-head { align-items: flex-start; flex-direction: column; }
+      .css-badge { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark"><span></span></span><span>Layout Lab</span></div>
+      <p class="eyebrow">CSS playground / 01</p>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">Explore the box</p>
+      <h1>Shape your layout,<br /><em>one property at a time.</em></h1>
+      <p class="hero-copy">A small, tactile playground for understanding how Flexbox and Grid change the relationship between a container and its children.</p>
+    </section>
+
+    <section class="workspace" aria-label="CSS layout playground">
+      <aside class="panel controls">
+        <div class="panel-head"><h2 class="panel-title">Container controls</h2><span class="live">LIVE</span></div>
+        <div class="field"><label for="display">Display</label><select id="display"><option value="block">block</option><option value="flex" selected>flex</option><option value="grid">grid</option></select></div>
+        <div class="field"><label for="direction">Flex direction</label><select id="direction"><option value="row" selected>row</option><option value="column">column</option></select></div>
+        <div class="field"><label for="justify">Justify content</label><select id="justify"><option value="flex-start" selected>flex-start</option><option value="center">center</option><option value="flex-end">flex-end</option><option value="space-between">space-between</option><option value="space-around">space-around</option><option value="space-evenly">space-evenly</option></select></div>
+        <div class="field"><label for="align">Align items</label><select id="align"><option value="stretch" selected>stretch</option><option value="flex-start">flex-start</option><option value="center">center</option><option value="flex-end">flex-end</option></select></div>
+        <div class="field"><label for="columns">Grid template columns</label><select id="columns"><option value="1fr" selected>1fr</option><option value="1fr 1fr">1fr 1fr</option><option value="1fr 1fr 1fr">1fr 1fr 1fr</option><option value="repeat(4, 1fr)">repeat(4, 1fr)</option></select></div>
+                <div class="box-controls">
+          <h3>Box model controls</h3>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="marginTop">Margin top</label>
+              <span class="range-value" id="marginTopValue">0px</span>
+            </div>
+            <input id="marginTop" type="range" min="0" max="40" value="0">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="marginRight">Margin right</label>
+              <span class="range-value" id="marginRightValue">0px</span>
+            </div>
+            <input id="marginRight" type="range" min="0" max="40" value="0">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="marginBottom">Margin bottom</label>
+              <span class="range-value" id="marginBottomValue">0px</span>
+            </div>
+            <input id="marginBottom" type="range" min="0" max="40" value="0">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="marginLeft">Margin left</label>
+              <span class="range-value" id="marginLeftValue">0px</span>
+            </div>
+            <input id="marginLeft" type="range" min="0" max="40" value="0">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="paddingTop">Padding top</label>
+              <span class="range-value" id="paddingTopValue">18px</span>
+            </div>
+            <input id="paddingTop" type="range" min="0" max="40" value="18">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="paddingRight">Padding right</label>
+              <span class="range-value" id="paddingRightValue">18px</span>
+            </div>
+            <input id="paddingRight" type="range" min="0" max="40" value="18">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="paddingBottom">Padding bottom</label>
+              <span class="range-value" id="paddingBottomValue">18px</span>
+            </div>
+            <input id="paddingBottom" type="range" min="0" max="40" value="18">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="paddingLeft">Padding left</label>
+              <span class="range-value" id="paddingLeftValue">18px</span>
+            </div>
+            <input id="paddingLeft" type="range" min="0" max="40" value="18">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="borderTop">Border top</label>
+              <span class="range-value" id="borderTopValue">2px</span>
+            </div>
+            <input id="borderTop" type="range" min="0" max="12" value="2">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="borderRight">Border right</label>
+              <span class="range-value" id="borderRightValue">2px</span>
+            </div>
+            <input id="borderRight" type="range" min="0" max="12" value="2">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="borderBottom">Border bottom</label>
+              <span class="range-value" id="borderBottomValue">2px</span>
+            </div>
+            <input id="borderBottom" type="range" min="0" max="12" value="2">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="borderLeft">Border left</label>
+              <span class="range-value" id="borderLeftValue">2px</span>
+            </div>
+            <input id="borderLeft" type="range" min="0" max="12" value="2">
+          </div>
+
+          <div class="range-field">
+            <div class="range-label">
+              <label for="radius">Corner radius</label>
+              <span class="range-value" id="radiusValue">14px</span>
+            </div>
+            <input id="radius" type="range" min="0" max="40" value="14">
+          </div>
+        </div>
+        <button class="reset" id="reset" type="button">Reset playground</button>
+      </aside>
+
+      <section class="panel stage">
+        <div class="stage-head">
+          <div><h2 class="stage-title">Live canvas</h2><p class="stage-hint">Change a control to see the items respond.</p></div>
+          <code class="css-badge" id="layoutBadge">display: flex</code>
+        </div>
+        <div class="demo-container" id="container">
+          <div class="item"><div>01<small>item</small></div></div>
+          <div class="item"><div>02<small>item</small></div></div>
+          <div class="item"><div>03<small>item</small></div></div>
+          <div class="item"><div>04<small>item</small></div></div>
+          <div class="item"><div>05<small>item</small></div></div>
+        </div>
+        <div class="code-card" id="codePreview" aria-live="polite"></div>
+      </section>
+    </section>
+    <footer class="footer">Try <strong>grid</strong> with three columns, then switch back to <strong>flex</strong> and experiment with spacing.</footer>
+  </main>
+
+  <script>
+    /* filepath: c:\Users\vanessa\AirBnB_clone\web_static\task5\refined-box-model.html */
+    const container = document.querySelector('#container');
+    const controls = ['display', 'direction', 'justify', 'align', 'columns']
+      .reduce((all, id) => {
+        all[id] = document.querySelector('#' + id);
+        return all;
+      }, {});
+
+    const boxControls = [
+      'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+      'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+      'borderTop', 'borderRight', 'borderBottom', 'borderLeft',
+      'radius'
+    ].reduce((all, id) => {
+      all[id] = document.querySelector('#' + id);
+      return all;
+    }, {});
+
+    const layoutBadge = document.querySelector('#layoutBadge');
+    const codePreview = document.querySelector('#codePreview');
+
+    const defaults = {
+      display: 'flex',
+      direction: 'row',
+      justify: 'flex-start',
+      align: 'stretch',
+      columns: '1fr'
+    };
+
+    function updateLayout() {
+      const values = Object.fromEntries(
+        Object.entries(controls).map(([key, select]) => [key, select.value])
+      );
+
+      container.style.display = values.display;
+      container.style.flexDirection = values.direction;
+      container.style.justifyContent = values.justify;
+      container.style.alignItems = values.align;
+      container.style.gridTemplateColumns = values.columns;
+
+      Object.entries(boxControls).forEach(([key, input]) => {
+        const value = `${input.value}px`;
+        document.querySelector(`#${key}Value`).textContent = value;
+      });
+
+      container.style.margin = [
+        boxControls.marginTop.value,
+        boxControls.marginRight.value,
+        boxControls.marginBottom.value,
+        boxControls.marginLeft.value
+      ].map(value => `${value}px`).join(' ');
+
+      container.style.padding = [
+        boxControls.paddingTop.value,
+        boxControls.paddingRight.value,
+        boxControls.paddingBottom.value,
+        boxControls.paddingLeft.value
+      ].map(value => `${value}px`).join(' ');
+
+      container.style.borderStyle = 'dashed';
+      container.style.borderWidth = [
+        boxControls.borderTop.value,
+        boxControls.borderRight.value,
+        boxControls.borderBottom.value,
+        boxControls.borderLeft.value
+      ].map(value => `${value}px`).join(' ');
+
+      container.style.borderRadius = `${boxControls.radius.value}px`;
+
+      layoutBadge.textContent = `display: ${values.display}`;
+
+      codePreview.innerHTML =
+        '<span class="selector">.container</span> {<br>' +
+        `  <span class="property">display</span>: <span class="value">${values.display}</span>;<br>` +
+        (values.display === 'flex'
+          ? `  <span class="property">flex-direction</span>: <span class="value">${values.direction}</span>;<br>`
+          : '') +
+        `  <span class="property">justify-content</span>: <span class="value">${values.justify}</span>;<br>` +
+        `  <span class="property">align-items</span>: <span class="value">${values.align}</span>;<br>` +
+        (values.display === 'grid'
+          ? `  <span class="property">grid-template-columns</span>: <span class="value">${values.columns}</span>;<br>`
+          : '') +
+        `  <span class="property">margin</span>: <span class="value">${container.style.margin}</span>;<br>` +
+        `  <span class="property">padding</span>: <span class="value">${container.style.padding}</span>;<br>` +
+        `  <span class="property">border-width</span>: <span class="value">${container.style.borderWidth}</span>;<br>` +
+        `  <span class="property">border-radius</span>: <span class="value">${container.style.borderRadius}</span>;`;
+    }
+
+    Object.values(controls).forEach(select => {
+      select.addEventListener('change', updateLayout);
+    });
+
+    Object.values(boxControls).forEach(input => {
+      input.addEventListener('input', updateLayout);
+    });
+
+    document.querySelector('#reset').addEventListener('click', () => {
+      Object.entries(defaults).forEach(([key, value]) => {
+        controls[key].value = value;
+      });
+
+      Object.entries(boxControls).forEach(([key, input]) => {
+        input.value = key.startsWith('padding')
+          ? 18
+          : key === 'radius'
+            ? 14
+            : key.startsWith('border')
+              ? 2
+              : 0;
+      });
+
+      updateLayout();
+    });
+
+    updateLayout();
+    

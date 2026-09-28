@@ -1,0 +1,118 @@
+.filters {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  padding: 0 30px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.filter-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 25%;
+  height: 100%;
+  border-right: 1px solid #dddddd;
+  cursor: pointer;
+}
+
+.amenities-filter {
+  width: 28%;
+  border-right: 0;
+}
+
+.filter-label {
+  padding-left: 20px;
+}
+
+.filter-label h3,
+.filter-label h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.filter-label h3 {
+  font-weight: 600;
+}
+
+.filter-label h4 {
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.popover {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: -1px;
+  display: none;
+  width: calc(100% + 1px);
+  margin: 0;
+  padding: 18px 28px;
+  border: 1px solid #dddddd;
+  border-radius: 0 0 4px 4px;
+  background: #fafafa;
+  list-style: none;
+}
+
+.filter-group:hover .popover,
+.filter-group:focus-within .popover {
+  display: block;
+}
+
+.popover li {
+  padding: 4px 0;
+}
+
+.popover h2 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.popover ul {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  list-style: none;
+}
+
+.search-button {
+  width: 20%;
+  height: 48px;
+  margin-left: auto;
+  border: 0;
+  border-radius: 4px;
+  background: #ff5a5f;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.search-button:hover {
+  background: #e94c52;
+}
+
+@media (max-width: 600px) {
+  .filters {
+    padding: 0 12px;
+  }
+
+  .filter-group {
+    width: 34%;
+  }
+
+  .amenities-filter {
+    width: 38%;
+  }
+
+  .filter-label {
+    padding-left: 8px;
+  }
+
+  .search-button {
+    width: 26%;
+    font-size: 14px;
+  }
+}

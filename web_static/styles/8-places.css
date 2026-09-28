@@ -1,0 +1,134 @@
+.places h1 {
+  margin: 30px 0 20px;
+  font-size: 30px;
+}
+
+.places-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.place-card {
+  flex: 0 1 430px;
+  min-height: 398px;
+  padding: 20px;
+  border: 1px solid #ff5a5f;
+  border-radius: 4px;
+}
+
+.place-heading {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 95px;
+  padding: 0 72px 10px;
+}
+
+.place-heading h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 30px;
+}
+
+.price_by_night {
+  position: absolute;
+  top: -2px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 60px;
+  padding: 0 8px;
+  border: 4px solid #ff5a5f;
+  border-radius: 50%;
+  color: #ff5a5f;
+  font-size: 30px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.information {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 82px;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+
+.information > div {
+  display: flex;
+  flex: 0 0 100px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-align: center;
+}
+
+.amenity-icon {
+  display: block;
+  width: 50px;
+  height: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.guests-icon {
+  background-image: url("../images/icon_group.png");
+}
+
+.bedrooms-icon {
+  background-image: url("../images/icon_bed.png");
+}
+
+.bathrooms-icon {
+  background-image: url("../images/icon_bath.png");
+}
+
+.user {
+  margin-top: 20px;
+  line-height: 20px;
+}
+
+.user strong {
+  font-weight: 700;
+}
+
+.description {
+  margin-top: 8px;
+  line-height: 17px;
+}
+
+@media (max-width: 500px) {
+  .place-card {
+    flex-basis: 100%;
+    padding: 16px;
+  }
+
+  .place-heading {
+    padding-right: 66px;
+    padding-left: 10px;
+  }
+
+  .place-heading h2 {
+    font-size: 24px;
+  }
+
+  .price_by_night {
+    min-width: 56px;
+    height: 56px;
+    padding: 0 5px;
+    font-size: 24px;
+  }
+
+  .information > div {
+    flex-basis: 33.333%;
+    font-size: 12px;
+  }
+}
