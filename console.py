@@ -57,6 +57,30 @@ class HBNBCommand(cmd.Cmd):
             return
 
         obj = self.classes[class_name]()
+
+        for param in args[1:]:
+            if "=" not in param:
+                continue
+
+            key, value = param.split("=", 1)
+
+            if not key or not value:
+                continue
+
+            try:
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1]
+                    value = value.replace("_", " ")
+                    value = value.replace('\\"', '"')
+                elif "." in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+            except ValueError:
+                continue
+
+            setattr(obj, key, value)
+
         obj.save()
         print(obj.id)
 
