@@ -1,106 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="UTF-8">
     <title>AirBnB Clone</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
     <link rel="stylesheet" href="styles/4-common.css">
     <link rel="stylesheet" href="styles/3-header.css">
     <link rel="stylesheet" href="styles/3-footer.css">
     <link rel="stylesheet" href="styles/6-filters.css">
     <link rel="stylesheet" href="styles/8-places.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="#" aria-label="AirBnB Clone home"></a>
-      </div>
+</head>
+<body>
+    <header>
+        <div class="logo"></div>
     </header>
 
-    <main class="container">
-      <section class="filters" aria-label="Search filters">
-        <div class="filter-group">
-          <div class="filter-label">
-            <h3>States</h3>
-            <h4>California, Arizona...</h4>
-          </div>
-          <ul class="popover">
-            <li><h2>California</h2>
-              <ul>
-                <li>San Francisco</li>
-                <li>Los Angeles</li>
-              </ul>
-            </li>
-            <li><h2>Arizona</h2>
-              <ul>
-                <li>Phoenix</li>
-                <li>Scottsdale</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-        <div class="filter-group amenities-filter">
-          <div class="filter-label">
-            <h3>Amenities</h3>
-            <h4>Internet, Kitchen...</h4>
-          </div>
-          <ul class="popover">
-            <li>Internet</li>
-            <li>Kitchen</li>
-            <li>Air conditioning</li>
-          </ul>
-        </div>
-        <button class="search-button" type="button">Search</button>
-      </section>
+    <div class="container">
+        <section class="filters">
+            <div class="locations">
+                <h3>States</h3>
+                <h4>California, Arizona...</h4>
 
-      <section class="places" aria-labelledby="places-heading">
-        <h1 id="places-heading">Places</h1>
-        <div class="places-grid">
-          <article class="place-card">
-            <div class="place-heading">
-              <h2>My home</h2>
-              <div class="price_by_night">$80</div>
-            </div>
-            <div class="information">
-              <div class="max_guest"><span class="amenity-icon guests-icon" aria-hidden="true"></span><span>2 Guests</span></div>
-              <div class="number_rooms"><span class="amenity-icon bedrooms-icon" aria-hidden="true"></span><span>1 Bedroom</span></div>
-              <div class="number_bathrooms"><span class="amenity-icon bathrooms-icon" aria-hidden="true"></span><span>1 Bathroom</span></div>
-            </div>
-            <div class="user"><strong>Owner:</strong> John Lennon</div>
-            <div class="description">This is a lovely 1 bedroom and 1 bathroom apartment that can accommodate 2 people. It is located at the center of Shanghai, close to public transit and neighborhood restaurants.</div>
-          </article>
+                <ul class="popover">
+                    <li>
+                        <h2>California</h2>
+                        <ul>
+                            <li>San Francisco</li>
+                            <li>Los Angeles</li>
+                        </ul>
+                    </li>
 
-          <article class="place-card">
-            <div class="place-heading">
-              <h2>Tiny house</h2>
-              <div class="price_by_night">$65</div>
+                    <li>
+                        <h2>Arizona</h2>
+                        <ul>
+                            <li>Phoenix</li>
+                            <li>Tucson</li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            <div class="information">
-              <div class="max_guest"><span class="amenity-icon guests-icon" aria-hidden="true"></span><span>4 Guests</span></div>
-              <div class="number_rooms"><span class="amenity-icon bedrooms-icon" aria-hidden="true"></span><span>2 Bedrooms</span></div>
-              <div class="number_bathrooms"><span class="amenity-icon bathrooms-icon" aria-hidden="true"></span><span>1 Bathroom</span></div>
-            </div>
-            <div class="user"><strong>Owner:</strong> Adrienne</div>
-            <div class="description">Our place is a private, affordable stand-alone guest house centrally located just minutes from downtown, restaurants, and city parks. Enjoy a quiet stay with a full bath, compact kitchen, and a comfortable living area.</div>
-          </article>
 
-          <article class="place-card">
-            <div class="place-heading">
-              <h2>A suite</h2>
-              <div class="price_by_night">$190</div>
-            </div>
-            <div class="information">
-              <div class="max_guest"><span class="amenity-icon guests-icon" aria-hidden="true"></span><span>3 Guests</span></div>
-              <div class="number_rooms"><span class="amenity-icon bedrooms-icon" aria-hidden="true"></span><span>2 Bedrooms</span></div>
-              <div class="number_bathrooms"><span class="amenity-icon bathrooms-icon" aria-hidden="true"></span><span>2 Bathrooms</span></div>
-            </div>
-            <div class="user"><strong>Owner:</strong> Nina</div>
-            <div class="description">A bright and spacious suite with a private entrance, comfortable beds, and a large bathroom. Settle in and enjoy the nearby cafés, shops, and walking paths.</div>
-          </article>
-        </div>
-      </section>
-    </main>
+            <div class="amenities">
+                <h3>Amenities</h3>
+                <h4>Internet, Kitchen...</h4>
 
-    <footer class="site-footer">Best School</footer>
-  </body>
+                <ul class="popover">
+                    <li>Internet</li>
+                    <li>Kitchen</li>
+                    <li>TV</li>
+                </ul>
+            </div>
+
+            <button>Search</button>
+        </section>
+
+        <section class="places">
+            <h1>Places</h1>
+
+            <div class="places-grid">
+                <article class="place-card">
+                    <div class="place-heading">
+                        <h2>My home</h2>
+                        <div class="price_by_night">$80</div>
+                    </div>
+
+                    <div class="information">
+                        <div class="max_guest">
+                            <span class="amenity-icon guests-icon"></span>
+                            <span>2 Guests</span>
+                        </div>
+
+                        <div class="number_rooms">
+                            <span class="amenity-icon bedrooms-icon"></span>
+                            <span>1 Bedroom</span>
+                        </div>
+
+                        <div class="number_bathrooms">
+                            <span class="amenity-icon bathrooms-icon"></span>
+                            <span>1 Bathroom</span>
+                        </div>
+                    </div>
+
+                    <div class="user">
+                        <strong>Owner:</strong> John Lennon
+                    </div>
+
+                    <div class="description">
+                        This is a lovely 1 bedroom and 1 bathroom apartment that can
+                        accommodate 2 people. It is located at the center of Shanghai,
+                        close to public transit and neighborhood restaurants.
+                    </div>
+                </article>
+
+                <article class="place-card">
+                    <div class="place-heading">
+                        <h2>Tiny house</h2>
+                        <div class="price_by_night">$65</div>
+                    </div>
+
+                    <div class="information">
+                        <div class="max_guest">
+                            <span class="amenity-icon guests-icon"></span>
+                            <span>4 Guests</span>
+                        </div>
+
+                        <div class="number_rooms">
+                            <span class="amenity-icon bedrooms-icon"></span>
+                            <span>2 Bedrooms</span>
+                        </div>
+
+                        <div class="number_bathrooms">
+                            <span class="amenity-icon bathrooms-icon"></span>
+                            <span>1 Bathroom</span>
+                        </div>
+                    </div>
+
+                    <div class="user">
+                        <strong>Owner:</strong> Adrienne
+                    </div>
+
+                    <div class="description">
+                        Our place is a private, affordable stand-alone guest house
+                        centrally located just minutes from downtown, restaurants,
+                        and city parks.
+                    </div>
+                </article>
+
+                <article class="place-card">
+                    <div class="place-heading">
+                        <h2>A suite</h2>
+                        <div class="price_by_night">$190</div>
+                    </div>
+
+                    <div class="information">
+                        <div class="max_guest">
+                            <span class="amenity-icon guests-icon"></span>
+                            <span>3 Guests</span>
+                        </div>
+
+                        <div class="number_rooms">
+                            <span class="amenity-icon bedrooms-icon"></span>
+                            <span>2 Bedrooms</span>
+                        </div>
+
+                        <div class="number_bathrooms">
+                            <span class="amenity-icon bathrooms-icon"></span>
+                            <span>2 Bathrooms</span>
+                        </div>
+                    </div>
+
+                    <div class="user">
+                        <strong>Owner:</strong> Nina
+                    </div>
+
+                    <div class="description">
+                        A bright and spacious suite with a private entrance,
+                        comfortable beds, and a large bathroom.
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        Best School
+    </footer>
+</body>
 </html>
