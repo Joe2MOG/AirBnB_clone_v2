@@ -40,3 +40,14 @@ The project teaches:
 - datetime
 - Unit testing
 - Command interpreters
+
+## MySQL Storage
+
+This version of the AirBnB clone extends the project to support MySQL database storage using SQLAlchemy.
+
+The application can switch between file storage and database storage using environment variables without changing the application logic.
+
+### Team
+
+- Joseph Albert
+- Vanessa Kittivo
