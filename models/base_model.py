@@ -52,10 +52,13 @@ class BaseModel:
 
     def __str__(self):
         """Return a string representation of the instance."""
+        obj_dict = self.__dict__.copy()
+        obj_dict.pop("_sa_instance_state", None)
+
         return "[{}] ({}) {}".format(
             self.__class__.__name__,
             self.id,
-            self.__dict__
+            obj_dict
         )
 
     def save(self):
