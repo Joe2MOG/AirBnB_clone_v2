@@ -56,7 +56,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
-        obj = self.classes[class_name]()
+        kwargs = {}
 
         for param in args[1:]:
             if "=" not in param:
@@ -79,8 +79,9 @@ class HBNBCommand(cmd.Cmd):
             except ValueError:
                 continue
 
-            setattr(obj, key, value)
+            kwargs[key] = value
 
+        obj = self.classes[class_name](**kwargs)
         obj.save()
         print(obj.id)
 
@@ -138,13 +139,12 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
             return
 
-        del objects[key]
+        storage.delete(objects[key])
         storage.save()
 
     def do_all(self, arg):
         """Print all instances, optionally filtered by class."""
         args = arg.split()
-        objects = storage.all()
 
         if len(args) > 0:
             class_name = args[0]
@@ -153,14 +153,11 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
 
-            result = [
-                str(obj)
-                for obj in objects.values()
-                if obj.__class__.__name__ == class_name
-            ]
+            objects = storage.all(self.classes[class_name])
         else:
-            result = [str(obj) for obj in objects.values()]
+            objects = storage.all()
 
+        result = [str(obj) for obj in objects.values()]
         print(result)
 
     def do_update(self, arg):
@@ -205,9 +202,15 @@ class HBNBCommand(cmd.Cmd):
             current_value = getattr(obj, attr_name)
 
             if isinstance(current_value, int):
-                value = int(value)
+                try:
+                    value = int(value)
+                except ValueError:
+                    pass
             elif isinstance(current_value, float):
-                value = float(value)
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass
 
         setattr(obj, attr_name, value)
         obj.save()
