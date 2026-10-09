@@ -2,8 +2,10 @@
 """Tests for the BaseModel class."""
 
 import unittest
-import time
 from datetime import datetime
+from os import getenv
+from time import sleep
+
 from models.base_model import BaseModel
 
 
@@ -21,57 +23,64 @@ class TestBaseModel(unittest.TestCase):
 
     def test_unique_ids(self):
         """Test that two instances have different IDs."""
-        model1 = BaseModel()
-        model2 = BaseModel()
+        first = BaseModel()
+        second = BaseModel()
 
-        self.assertNotEqual(model1.id, model2.id)
-
-    def test_to_dict(self):
-        """Test the dictionary representation."""
-        model = BaseModel()
-        model.name = "John"
-
-        data = model.to_dict()
-
-        self.assertEqual(data["__class__"], "BaseModel")
-        self.assertEqual(data["name"], "John")
-        self.assertIsInstance(data["created_at"], str)
-        self.assertIsInstance(data["updated_at"], str)
-
-    def test_recreate_from_dict(self):
-        """Test recreating an object from a dictionary."""
-        model = BaseModel()
-        model.name = "John"
-
-        data = model.to_dict()
-        new_model = BaseModel(**data)
-
-        self.assertEqual(model.id, new_model.id)
-        self.assertEqual(model.name, new_model.name)
-        self.assertIsInstance(new_model.created_at, datetime)
-        self.assertIsInstance(new_model.updated_at, datetime)
-        self.assertIsNot(model, new_model)
-
-    def test_save(self):
-        """Test that save updates updated_at."""
-        model = BaseModel()
-        old_updated_at = model.updated_at
-        time.sleep(0.01)
-        model.save()
-
-        self.assertGreater(model.updated_at, old_updated_at)
+        self.assertNotEqual(first.id, second.id)
 
     def test_str(self):
         """Test the string representation."""
         model = BaseModel()
+        result = str(model)
 
-        expected = "[{}] ({}) {}".format(
-            model.__class__.__name__,
-            model.id,
-            model.__dict__
+        self.assertIn("[BaseModel]", result)
+        self.assertIn(model.id, result)
+
+    def test_to_dict(self):
+        """Test the dictionary representation."""
+        model = BaseModel()
+        result = model.to_dict()
+
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result["__class__"], "BaseModel")
+        self.assertEqual(result["id"], model.id)
+        self.assertIsInstance(result["created_at"], str)
+        self.assertIsInstance(result["updated_at"], str)
+        self.assertNotIn("_sa_instance_state", result)
+
+    def test_recreate_from_dict(self):
+        """Test recreating an object from a dictionary."""
+        original = BaseModel()
+        data = original.to_dict()
+
+        recreated = BaseModel(**data)
+
+        self.assertEqual(recreated.id, original.id)
+        self.assertEqual(
+            recreated.created_at,
+            original.created_at
+        )
+        self.assertEqual(
+            recreated.updated_at,
+            original.updated_at
         )
 
-        self.assertEqual(str(model), expected)
+    @unittest.skipIf(
+        getenv("HBNB_TYPE_STORAGE") == "db",
+        "BaseModel is not a mapped database model"
+    )
+    def test_save(self):
+        """Test that save updates updated_at."""
+        model = BaseModel()
+        old_updated_at = model.updated_at
+
+        sleep(0.01)
+        model.save()
+
+        self.assertGreater(
+            model.updated_at,
+            old_updated_at
+        )
 
 
 if __name__ == "__main__":

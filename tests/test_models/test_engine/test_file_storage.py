@@ -1,13 +1,19 @@
 #!/usr/bin/python3
-"""Tests for the FileStorage class."""
+"""Tests for the FileStorage engine."""
 
 import unittest
+from os import getenv
+
 from models import storage
 from models.base_model import BaseModel
 from models.city import City
 from models.state import State
 
 
+@unittest.skipIf(
+    getenv("HBNB_TYPE_STORAGE") == "db",
+    "FileStorage tests require FileStorage"
+)
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class."""
 
@@ -18,23 +24,31 @@ class TestFileStorage(unittest.TestCase):
     def test_new(self):
         """Test adding an object to storage."""
         model = BaseModel()
+
         storage.new(model)
 
-        key = "{}.{}".format(model.__class__.__name__, model.id)
+        key = "BaseModel.{}".format(model.id)
+
         self.assertIn(key, storage.all())
         self.assertIs(storage.all()[key], model)
+
+        storage.delete(model)
 
     def test_save_reload(self):
         """Test saving and reloading an object."""
         model = BaseModel()
-        model.name = "Test"
+
         storage.new(model)
         storage.save()
 
+        key = "BaseModel.{}".format(model.id)
+
         storage.reload()
 
-        key = "{}.{}".format(model.__class__.__name__, model.id)
         self.assertIn(key, storage.all())
+
+        storage.delete(storage.all()[key])
+        storage.save()
 
     def test_all_with_class(self):
         """Test filtering stored objects by class."""
@@ -52,12 +66,16 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(state_key, states)
         self.assertNotIn(city_key, states)
 
+        storage.delete(state)
+        storage.delete(city)
+
     def test_delete(self):
         """Test deleting an object from storage."""
         model = BaseModel()
+
         storage.new(model)
 
-        key = "{}.{}".format(model.__class__.__name__, model.id)
+        key = "BaseModel.{}".format(model.id)
 
         self.assertIn(key, storage.all())
 
@@ -85,8 +103,14 @@ class TestFileStorage(unittest.TestCase):
 
         objects = storage.all()
 
-        self.assertIn("State.{}".format(state.id), objects)
-        self.assertIn("City.{}".format(city.id), objects)
+        state_key = "State.{}".format(state.id)
+        city_key = "City.{}".format(city.id)
+
+        self.assertIn(state_key, objects)
+        self.assertIn(city_key, objects)
+
+        storage.delete(state)
+        storage.delete(city)
 
 
 if __name__ == "__main__":

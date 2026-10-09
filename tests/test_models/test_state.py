@@ -2,6 +2,8 @@
 """Tests for the State class."""
 
 import unittest
+
+from models.base_model import BaseModel
 from models.state import State
 
 
@@ -13,8 +15,9 @@ class TestState(unittest.TestCase):
         state = State()
 
         self.assertIsInstance(state, State)
+        self.assertIsInstance(state, BaseModel)
         self.assertIsInstance(state.id, str)
-        self.assertEqual(state.name, "")
+        self.assertIsNone(state.name)
 
 
 if __name__ == "__main__":

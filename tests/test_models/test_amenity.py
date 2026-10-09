@@ -2,7 +2,9 @@
 """Tests for the Amenity class."""
 
 import unittest
+
 from models.amenity import Amenity
+from models.base_model import BaseModel
 
 
 class TestAmenity(unittest.TestCase):
@@ -13,8 +15,9 @@ class TestAmenity(unittest.TestCase):
         amenity = Amenity()
 
         self.assertIsInstance(amenity, Amenity)
+        self.assertIsInstance(amenity, BaseModel)
         self.assertIsInstance(amenity.id, str)
-        self.assertEqual(amenity.name, "")
+        self.assertIsNone(amenity.name)
 
 
 if __name__ == "__main__":
