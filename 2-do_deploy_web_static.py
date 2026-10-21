@@ -6,10 +6,7 @@ import os
 from fabric.api import env, put, run
 
 
-env.hosts = [
-    "WEB01_IP",
-    "WEB02_IP"
-]
+env.hosts = []
 
 
 def do_deploy(archive_path):
