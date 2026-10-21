@@ -1,9 +1,8 @@
 #!/usr/bin/python3
-"""Create and deploy a web_static archive to remote web servers."""
+"""Create and deploy web_static archives."""
 
+import os
 from datetime import datetime
-from os import makedirs
-from os.path import basename, exists
 
 from fabric.api import env, local, put, run
 
@@ -15,9 +14,9 @@ env.hosts = [
 
 
 def do_pack():
-    """Generate a .tgz archive from the web_static directory."""
-    if not exists("versions"):
-        makedirs("versions")
+    """Create a compressed archive of the web_static directory."""
+    if not os.path.exists("versions"):
+        os.makedirs("versions")
 
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     archive_path = "versions/web_static_{}.tgz".format(timestamp)
@@ -35,50 +34,52 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-    """Deploy a web_static archive to all configured web servers."""
-    if not exists(archive_path):
+    """Deploy a web_static archive to the configured web servers."""
+    if not os.path.exists(archive_path):
         return False
 
-    archive_name = basename(archive_path)
-    release_name = archive_name.replace(".tgz", "")
-
-    remote_archive = "/tmp/{}".format(archive_name)
-    release_path = "/data/web_static/releases/{}/".format(
-        release_name
-    )
-
     try:
-        put(archive_path, remote_archive)
+        archive_name = archive_path.split("/")[-1]
+        release_name = archive_name.split(".")[0]
 
-        run("mkdir -p {}".format(release_path))
-
-        run(
-            "tar -xzf {} -C {}".format(
-                remote_archive,
-                release_path
-            )
-        )
-
-        run("rm {}".format(remote_archive))
+        put(archive_path, "/tmp/")
 
         run(
-            "mv {}web_static/* {}".format(
-                release_path,
-                release_path
+            "mkdir -p /data/web_static/releases/{}/".format(
+                release_name
             )
         )
 
         run(
-            "rm -rf {}web_static".format(
-                release_path
+            "tar -xzf /tmp/{} -C "
+            "/data/web_static/releases/{}/".format(
+                archive_name,
+                release_name
+            )
+        )
+
+        run("rm /tmp/{}".format(archive_name))
+
+        run(
+            "mv /data/web_static/releases/{}/web_static/* "
+            "/data/web_static/releases/{}/".format(
+                release_name,
+                release_name
+            )
+        )
+
+        run(
+            "rm -rf /data/web_static/releases/{}/web_static".format(
+                release_name
             )
         )
 
         run("rm -rf /data/web_static/current")
 
         run(
-            "ln -s {} /data/web_static/current".format(
-                release_path
+            "ln -s /data/web_static/releases/{}/ "
+            "/data/web_static/current".format(
+                release_name
             )
         )
 
