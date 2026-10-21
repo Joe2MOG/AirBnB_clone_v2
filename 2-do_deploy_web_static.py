@@ -3,13 +3,14 @@
 
 import os
 
-from fabric.api import env, local, put, run, sudo
+from fabric.api import env, local, put, run
 
 
 hosts = [
     os.getenv("WEB01_IP"),
     os.getenv("WEB02_IP")
 ]
+
 env.hosts = [host for host in hosts if host]
 
 if not env.hosts:
@@ -17,28 +18,20 @@ if not env.hosts:
 
 
 def is_local():
-    """Return True when deployment is running on the local machine."""
+    """Return True when deployment is running locally."""
     return env.host_string in ("", "localhost", "127.0.0.1")
 
 
 def execute(command):
-    """Run a command locally or on the current remote server."""
+    """Execute a command locally or on the remote server."""
     if is_local():
         return local(command)
+
     return run(command)
 
 
-def execute_sudo(command):
-    """Run a privileged command locally or remotely."""
-    if is_local():
-        if os.geteuid() == 0:
-            return local(command)
-        return local("sudo {}".format(command))
-    return sudo(command)
-
-
 def upload_archive(archive_path, archive_name):
-    """Copy an archive to /tmp locally or remotely."""
+    """Upload an archive to the /tmp directory."""
     if is_local():
         local(
             "cp {} /tmp/{}".format(
@@ -50,40 +43,31 @@ def upload_archive(archive_path, archive_name):
         put(archive_path, "/tmp/")
 
 
-def ensure_nginx():
-    """Ensure Nginx serves /hbnb_static/ from the current release."""
-    config = "/etc/nginx/sites-available/default"
-
-    command = (
-        "grep -q 'location /hbnb_static/' {0} || "
-        "sed -i '/server_name .*;/a\\        "
-        "location /hbnb_static/ {{ "
-        "alias /data/web_static/current/; "
-        "}}' {0}"
-    ).format(config)
-
-    execute_sudo(command)
-    execute_sudo("nginx -t")
-    execute_sudo("service nginx restart")
-
-
 def do_deploy(archive_path):
-    """Deploy a web_static archive to the configured web server."""
+    """Deploy a web_static archive to the configured server."""
     if not os.path.exists(archive_path):
         return False
 
     try:
-        archive_name = archive_path.split("/")[-1]
-        release_name = archive_name.split(".")[0]
+        archive_name = os.path.basename(archive_path)
+        release_name = archive_name.replace(".tgz", "")
+
         release_path = (
             "/data/web_static/releases/{}/".format(
                 release_name
             )
         )
 
-        upload_archive(archive_path, archive_name)
+        upload_archive(
+            archive_path,
+            archive_name
+        )
 
-        execute("mkdir -p {}".format(release_path))
+        execute(
+            "mkdir -p {}".format(
+                release_path
+            )
+        )
 
         execute(
             "tar -xzf /tmp/{} -C {}".format(
@@ -92,7 +76,11 @@ def do_deploy(archive_path):
             )
         )
 
-        execute("rm /tmp/{}".format(archive_name))
+        execute(
+            "rm -f /tmp/{}".format(
+                archive_name
+            )
+        )
 
         execute(
             "mv {}web_static/* {}".format(
@@ -107,15 +95,15 @@ def do_deploy(archive_path):
             )
         )
 
-        execute("rm -rf /data/web_static/current")
+        execute(
+            "rm -rf /data/web_static/current"
+        )
 
         execute(
             "ln -s {} /data/web_static/current".format(
                 release_path
             )
         )
-
-        ensure_nginx()
 
         print("New version deployed!")
         return True
